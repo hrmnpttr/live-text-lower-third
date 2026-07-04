@@ -8,12 +8,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class LiveState extends Model
 {
     protected $fillable = [
-        'mass_id', 'item_index', 'block_index', 'mode',
+        'mass_id', 'item_index', 'block_index', 'mode', 'paused',
         'preset', 'align', 'badge', 'theme_id', 'quick', 'updated_by',
     ];
 
     protected $casts = [
         'quick' => 'array',
+        'paused' => 'boolean',
     ];
 
     public function mass(): BelongsTo
@@ -47,6 +48,7 @@ class LiveState extends Model
             'item' => (int) $this->item_index,
             'block' => (int) $this->block_index,
             'mode' => $this->mode,
+            'paused' => (bool) $this->paused,
             'preset' => $this->preset,
             'align' => $this->align ?: 'center',
             'badge' => $this->badge ?: 'accent',

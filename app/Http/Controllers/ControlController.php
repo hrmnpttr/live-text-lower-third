@@ -70,12 +70,14 @@ class ControlController extends Controller
                 $state->block_index = 0;
                 $state->quick = null;
                 $state->mode = 'both';
+                $state->paused = false;
                 break;
 
             case 'goto':
                 $state->item_index = max(0, $request->integer('item'));
                 $state->block_index = max(0, $request->integer('block'));
                 $state->quick = null;
+                $state->paused = false;
                 if ($state->mode === 'clear') {
                     $state->mode = 'both';
                 }
@@ -129,6 +131,7 @@ class ControlController extends Controller
                     'target' => in_array($request->input('target'), ['full', 'lower', 'both'], true)
                         ? $request->input('target') : 'both',
                 ];
+                $state->paused = false;
                 if ($state->mode === 'clear') {
                     $state->mode = 'both';
                 }
@@ -136,6 +139,7 @@ class ControlController extends Controller
 
             case 'clear':
                 $state->quick = null;
+                $state->paused = false;
                 $state->mode = 'clear';
                 break;
         }
@@ -150,7 +154,10 @@ class ControlController extends Controller
         return response()->json($payload);
     }
 
-    /** Maju/mundur satu blok; meluap ke item berikut/sebelumnya. */
+    /**
+     * Maju/mundur satu blok. Saat berpindah ke item/lagu berikutnya,
+     * layar disembunyikan dulu (jeda) — Next berikutnya baru menampilkan.
+     */
     private function step(LiveState $state, int $dir): void
     {
         $mass = $state->mass?->load(['items.libraryItem', 'theme']);
@@ -163,34 +170,71 @@ class ControlController extends Controller
             return;
         }
 
-        $i = min((int) $state->item_index, count($items) - 1);
-        $b = (int) $state->block_index + $dir;
-
-        if ($dir > 0) {
-            while ($i < count($items) && $b >= count($items[$i]['blocks'])) {
-                $i++;
-                $b = 0;
-            }
-            if ($i >= count($items)) {
-                $i = count($items) - 1;
-                $b = count($items[$i]['blocks']) - 1;
-            }
-        } else {
-            while ($i >= 0 && $b < 0) {
-                $i--;
-                $b = $i >= 0 ? count($items[$i]['blocks']) - 1 : 0;
-            }
-            if ($i < 0) {
-                $i = 0;
-                $b = 0;
-            }
-        }
-
-        $state->item_index = $i;
-        $state->block_index = max(0, $b);
+        $count = count($items);
+        $i = min((int) $state->item_index, $count - 1);
+        $b = (int) $state->block_index;
         $state->quick = null;
+
         if ($state->mode === 'clear') {
             $state->mode = 'both';
+        }
+
+        if ($dir > 0) {
+            // Sedang jeda antar lagu → tampilkan item yang sudah menunggu
+            if ($state->paused) {
+                $state->paused = false;
+
+                return;
+            }
+
+            if ($b + 1 < count($items[$i]['blocks'])) {
+                $state->block_index = $b + 1;
+
+                return;
+            }
+
+            // Blok terakhir item ini → pindah ke item berikut, tapi jeda dulu
+            $next = $i + 1;
+            while ($next < $count && count($items[$next]['blocks']) === 0) {
+                $next++;
+            }
+            if ($next < $count) {
+                $state->item_index = $next;
+                $state->block_index = 0;
+                $state->paused = true;
+            }
+
+            return;
+        }
+
+        // Mundur: kalau sedang jeda, kembali ke blok terakhir item sebelumnya
+        if ($state->paused) {
+            $state->paused = false;
+            $prev = $i - 1;
+            while ($prev >= 0 && count($items[$prev]['blocks']) === 0) {
+                $prev--;
+            }
+            if ($prev >= 0) {
+                $state->item_index = $prev;
+                $state->block_index = count($items[$prev]['blocks']) - 1;
+            }
+
+            return;
+        }
+
+        if ($b - 1 >= 0) {
+            $state->block_index = $b - 1;
+
+            return;
+        }
+
+        $prev = $i - 1;
+        while ($prev >= 0 && count($items[$prev]['blocks']) === 0) {
+            $prev--;
+        }
+        if ($prev >= 0) {
+            $state->item_index = $prev;
+            $state->block_index = count($items[$prev]['blocks']) - 1;
         }
     }
 }

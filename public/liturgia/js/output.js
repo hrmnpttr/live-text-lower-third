@@ -191,7 +191,7 @@
     var pageinfo = document.getElementById('pageinfo');
     var meta = document.getElementById('meta-text');
 
-    var visible = st.mode === 'both' || st.mode === 'full';
+    var visible = (st.mode === 'both' || st.mode === 'full') && !st.paused;
     var quick = st.quick && (st.quick.target === 'both' || st.quick.target === 'full') ? st.quick : null;
 
     var key, build;
@@ -290,7 +290,7 @@
     var kicker = document.getElementById('lt-kicker');
     var contentEl = document.getElementById('lt-content');
 
-    var visible = st.mode === 'both' || st.mode === 'lower';
+    var visible = (st.mode === 'both' || st.mode === 'lower') && !st.paused;
     var quick = st.quick && (st.quick.target === 'both' || st.quick.target === 'lower') ? st.quick : null;
 
     var key, itemKey = null, kickerText = '', block = null;
@@ -395,7 +395,7 @@
       );
     }
 
-    var imgUrl = (S.state.mode === 'both' ||
+    var imgUrl = !S.state.paused && (S.state.mode === 'both' ||
       S.state.mode === (S.page === 'full' ? 'full' : 'lower'))
       ? activeImageUrl(S.state) : null;
     overlayImage(imgUrl);

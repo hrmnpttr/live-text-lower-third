@@ -46,6 +46,7 @@
         ' · Item ' + (state.item + 1) + '/' + rundown.items.length;
     }
     if (state.mode === 'clear') pos += (pos ? ' · ' : '') + 'LAYAR CLEAR';
+    if (state.paused) pos += (pos ? ' · ' : '') + 'JEDA — Next untuk tampilkan';
     $('now-pos').textContent = pos;
     $('lastby').textContent = state.updated_by ? 'oleh ' + state.updated_by : '';
 
@@ -219,6 +220,7 @@
   document.addEventListener('keydown', function (e) {
     var tag = (e.target.tagName || '').toLowerCase();
     if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+    if (e.key === 'Tab') { e.preventDefault(); post(e.shiftKey ? 'prev' : 'next'); return; }
     if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); post('next'); }
     if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); post('prev'); }
   });
