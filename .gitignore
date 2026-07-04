@@ -1,0 +1,15 @@
+/vendor
+/node_modules
+/.env
+/storage/*.key
+/storage/app/*
+!/storage/app/.gitkeep
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/logs/*
+!.gitkeep
+/database/database.sqlite
+/database/seeders/data/*.txt
+/public/storage
+.DS_Store
