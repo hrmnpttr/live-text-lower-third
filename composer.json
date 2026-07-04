@@ -2,7 +2,7 @@
     "name": "paroki/liturgia-live",
     "type": "project",
     "description": "Sistem teks ibadah: output full text + lower third untuk OBS, kontrol multi-perangkat, not angka, warna liturgi.",
-    "license": "MIT",
+    "license": "proprietary",
     "require": {
         "php": "^8.2",
         "laravel/framework": "^12.0",

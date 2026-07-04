@@ -1,5 +1,7 @@
 # Liturgia Live
 
+🇬🇧 [English version](README.en.md)
+
 Sistem teks ibadah Katolik untuk live streaming dan proyektor. Dua output sekaligus (teks penuh + lower third untuk OBS), kontrol realtime dari banyak perangkat, dukungan not angka, warna liturgi otomatis per tema, dan importer yang memotong teks misa lengkap menjadi rundown secara otomatis.
 
 Dibangun dengan Laravel 12, Filament 5, dan Laravel Reverb. Halaman output ditulis dengan JavaScript ES5 dan CSS konservatif agar kompatibel dengan browser source OBS versi lama.
@@ -81,4 +83,4 @@ Halaman output menghindari fitur CSS/JS modern (`aspect-ratio`, `gap` pada flexb
 
 ## Lisensi
 
-MIT — lihat [LICENSE](LICENSE).
+**Bebas dicopy dan digunakan untuk keperluan non-komersial** — gereja, paroki, sekolah, komunitas, dan penggunaan pribadi. Boleh dimodifikasi dan dibagikan ulang dengan lisensi yang sama, asalkan kredit tetap disertakan. Penggunaan komersial (menjual, menyewakan, atau memungut biaya) memerlukan izin tertulis dari pemegang hak cipta. Detail lengkap dwibahasa ada di [LICENSE](LICENSE).
