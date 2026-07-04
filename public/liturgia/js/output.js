@@ -67,8 +67,29 @@
     body.className += ' acc-' + (theme.accent_style || 'garis');
 
     setImg('logo', theme.logo);
-    setImg('bg-img', theme.background);
     setImg('wm-img', theme.watermark_image);
+  }
+
+  /* Background full layar dengan cross-fade halus.
+     Prioritas: background item rundown > background tema. */
+  function setBackground(url) {
+    var el = document.getElementById('bg-img');
+    if (!el) return;
+    var cur = el.getAttribute('src');
+    if (!url) {
+      el.style.display = 'none';
+      return;
+    }
+    if (cur === url) {
+      el.style.display = 'block';
+      return;
+    }
+    el.style.opacity = '0';
+    setTimeout(function () {
+      el.src = url;
+      el.style.display = 'block';
+      setTimeout(function () { el.style.opacity = '1'; }, 60);
+    }, cur ? 400 : 0);
   }
 
   function setImg(id, url) {
@@ -365,6 +386,14 @@
       body.className += ' badge-' + S.state.badge;
     }
     if (S.page === 'lower') applyPreset(S.state.preset);
+
+    if (S.page === 'full') {
+      var bgItem = (!S.state.quick && S.state.mode !== 'clear') ? currentItem() : null;
+      setBackground(
+        (bgItem && bgItem.background) ||
+        (S.state.theme && S.state.theme.background) || null
+      );
+    }
 
     var imgUrl = (S.state.mode === 'both' ||
       S.state.mode === (S.page === 'full' ? 'full' : 'lower'))

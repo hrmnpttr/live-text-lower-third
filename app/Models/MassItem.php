@@ -9,7 +9,7 @@ class MassItem extends Model
 {
     protected $fillable = [
         'mass_id', 'sort', 'header', 'title', 'library_item_id',
-        'section_index', 'body', 'notation', 'image_path', 'display', 'title_only',
+        'section_index', 'body', 'notation', 'image_path', 'background_path', 'display', 'title_only',
     ];
 
     protected $casts = [
@@ -84,6 +84,7 @@ class MassItem extends Model
             'title' => $title,
             'display' => $this->display,
             'title_only' => $this->title_only,
+            'background' => $this->background_path ? asset('storage/'.$this->background_path) : null,
             'blocks' => array_values($blocks),
         ];
     }

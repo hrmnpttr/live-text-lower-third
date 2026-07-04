@@ -101,6 +101,19 @@ class MassResource extends Resource
                         ->label('Not angka manual (opsional)')
                         ->rows(3)
                         ->placeholder("not: 1 2 | 3 3 [.3] ([43]) ||\nsyl: Sung- guh | ba- ik me- nya-"),
+                    Select::make('background_path')
+                        ->label('Background full layar untuk item ini (opsional)')
+                        ->options(function () {
+                            $files = \Illuminate\Support\Facades\Storage::disk('public')->files('backgrounds');
+
+                            return collect($files)
+                                ->filter(fn ($f) => preg_match('/\.(svg|png|jpe?g|webp)$/i', $f))
+                                ->mapWithKeys(fn ($f) => [$f => basename($f)])
+                                ->all();
+                        })
+                        ->searchable()
+                        ->placeholder('(ikut background tema)')
+                        ->helperText('Galeri diambil dari storage/app/public/backgrounds — tambah gambar lewat upload background di menu Tema, atau salin file ke folder itu.'),
                     \Filament\Forms\Components\FileUpload::make('image_path')
                         ->label('Gambar full layar (opsional)')
                         ->image()

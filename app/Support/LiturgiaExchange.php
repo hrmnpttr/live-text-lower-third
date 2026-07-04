@@ -67,6 +67,7 @@ class LiturgiaExchange
                         'body' => $it->body,
                         'notation' => $it->notation,
                         'image_path' => $it->image_path,
+                        'background_path' => $it->background_path,
                         'display' => $it->display,
                         'title_only' => $it->title_only,
                     ];
@@ -152,6 +153,7 @@ class LiturgiaExchange
         foreach ($data['masses'] ?? [] as $m) {
             foreach ($m['items'] ?? [] as $it) {
                 $paths[] = $it['image_path'] ?? null;
+                $paths[] = $it['background_path'] ?? null;
             }
         }
 
